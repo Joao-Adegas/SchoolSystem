@@ -1,87 +1,82 @@
-import "../Form/Form.sass"
-import { useState } from "react";
-import axios from "axios"
+import "../Form/Form.sass";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import axios from "axios";
+import Swal from "sweetalert2";
 
+const schema = z.object({
+    username: z.string().min(3, "O nome deve ter pelo menos três caracteres"),
+    password: z.string().min(3, "A senha deve ter pelo menos seis caracteres"),
+});
 
 export default function Form() {
-
     const navigate = useNavigate();
-    // FIX: Inicializar com strings vazias ao invés de undefined
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
 
-    const handleLogin = async (event) => {
-        event.preventDefault();
+ 
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
+        resolver: zodResolver(schema),
+    });
 
+    const handleLogin = async (data) => {
         try {
-            const response = await axios.post("http://127.0.0.1:8000/token/", {
-                username,
-                password
+            const response = await axios.post("http://127.0.0.1:8000/token/", data);
 
-            });
             if (response.data.access) {
-
-                localStorage.setItem("token", response.data.access)
+                localStorage.setItem("token", response.data.access);
                 localStorage.setItem("user_type", response.data.usuario.tipo);
                 localStorage.setItem("nome", response.data.usuario.nome);
-                
-                console.log("Username: ", response.data.usuario.username)
-                console.log("Tipo Usuario: ", response.data.usuario.tipo)
-                console.log("Nome: ",response.data.usuario.nome)
-                console.log("token recebido: ", response.data.access)
-           
-                navigate("/Home"); // Voltando para navigate que é mais apropriado para SPAs
-            }
-            else {
-                alert("Credenciais inválidas")
-            }
 
+                console.log("Username:", response.data.usuario.username);
+                console.log("Tipo Usuario:", response.data.usuario.tipo);
+                console.log("Nome:", response.data.usuario.nome);
+                console.log("Token recebido:", response.data.access);
+
+                navigate("/Home");
+            } else {
+                alert("Credenciais inválidas");
+            }
         } catch (error) {
-            alert("Erro ao fazer login", error)
+            alert("Erro ao fazer login");
         }
     };
 
     return (
-
         <div className="Container-Login">
-
             <div className="containerBackground">
-
                 <div>
-                    <div> <img src="/Login.svg" alt="image" srcSet="" className="img"/> </div>
+                    <img src="/Login.svg" alt="Login" className="img" />
                 </div>
 
                 <div className="container-form">
-                    <div>
-                        <h1>Login</h1>
-                    </div>
+                    <h1>Login</h1>
 
-                    <form action="" method="post" className="form" onSubmit={handleLogin}>
-
+                    <form onSubmit={handleSubmit(handleLogin)} className="form">
                         <input
                             type="text"
                             placeholder="Username"
-                            name="Username"
                             className="input"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)} />
+                            {...register("username")}
+                        />
+                        {errors.username && <p className="error">{errors.username.message}</p>}
 
                         <input
                             type="password"
                             placeholder="Password"
-                            name="password"
-                            value={password}
                             className="input"
-                            onChange={(e) => setPassword(e.target.value)} />
-
+                            {...register("password")}
+                        />
+                        {errors.password && <p className="error">{errors.password.message}</p>}
 
                         <button type="submit">Entrar</button>
                     </form>
                 </div>
             </div>
-
-
-        </div >
-    )
+        </div>
+    );
 }

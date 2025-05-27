@@ -2,6 +2,7 @@ import { useState, useEffect ,useRef} from 'react';
 import axios from 'axios';
 import Modal from "../Modal/Modal"
 import "../ListaSalas/ListaSalas.sass"
+import Swal from "sweetalert2";
 
 export default function ListaSalas() {
     const token = localStorage.getItem("token");
@@ -90,15 +91,29 @@ export default function ListaSalas() {
 
 
     const deletarSala = (id) => {
-    
+        Swal.fire({
+            title:`Tem certeza que deseja deletar a sala ${id}`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sim, deletar!",
+            customClass: {
+                title: "msg-deletar-titulo msg-deletar",
+              }
+        }).then((result) =>{
+            if(result.isConfirmed){
+
+                axios.delete(`http://127.0.0.1:8000/sala/${id}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                }).then(response => {
+                    buscarSala()
+                }).catch(error => {
+                    console.error("Erro ao deletar sala:", error);
+                });
+            }
+        })
        
-        axios.delete(`http://127.0.0.1:8000/sala/${id}`, {
-            headers: { Authorization: `Bearer ${token}` }
-        }).then(response => {
-            buscarSala()
-        }).catch(error => {
-            console.error("Erro ao deletar sala:", error);
-        });
     };
 
     useEffect(()=>{
@@ -128,7 +143,7 @@ export default function ListaSalas() {
                             sala.map(sala => (
                                 <li key={sala.id}>
                                     <div className="informations-sala">
-                                        <p>Identificação: <strong>{sala.id}</strong> - Número: {sala.numero}</p>
+                                        <p>Identificação: <strong className='destaque'>{sala.id}</strong> - Número: <strong className='destaque'>{sala.numero}</strong></p>
                                         <div className="btns-salas">
                                             <button onClick={() => deletarSala(sala.id)} className='btn-salas'>
                                                 <img src="../public/lixeira-de-reciclagem.png" alt="deletar" srcSet="" className="icon"/>

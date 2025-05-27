@@ -40,6 +40,9 @@
                 flex-direction: column
                 gap: 2rem
                 align-items: center
+
+                .error
+                    color: red
             
 
                 .input
@@ -58,7 +61,7 @@
 
                 button
                     padding: 10px
-                    width: 10vw
+                    width: 100px
                     border-radius: 5px
                     border: none
                     background-color: #2050b8
@@ -70,5 +73,11 @@
     .img
         width: 30vw
 
+
+    @media screen and (max-width:1140px)
+        .containerBackground
+            flex-direction: column
+            text-align: center
+            gap: 1rem
 
         

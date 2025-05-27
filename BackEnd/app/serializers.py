@@ -12,6 +12,28 @@ class ProfessorGestorSerializer(serializers.ModelSerializer):
         model = ProfessorGestor
         fields = ['NI','Nome','Telefone','Data_de_Nascimento','Data_de_contratacao','Usuario','username','password']
 
+    #     def validate_username(self, value):
+        
+    #         if ProfessorGestor.objects.filter(username=value).exists():
+    #             raise serializers.ValidationError("O nome de usuário já está em uso. Escolha outro.")
+    #         return value
+
+    # def validate(self, data):
+  
+    #     data_nascimento = data.get('Data_de_Nascimento')
+    #     data_contratacao = data.get('Data_de_contratacao')
+
+    #     if data_nascimento and data_contratacao and data_nascimento > data_contratacao:
+    #         raise serializers.ValidationError({"Data_de_Nascimento": "A data de nascimento não pode ser mais recente que a data de contratação."})
+
+    #     return data
+
+    # def validate_Telefone(self, value):
+    #     telefone_regex = r'^\(\d{2}\) \d{4,5}-\d{4}$' 
+    #     if not re.match(telefone_regex, value):
+    #         raise serializers.ValidationError("O número de telefone deve estar no formato (XX) XXXXX-XXXX.")
+    #     return value
+
     def create(self, validated_data):
         password = validated_data.pop('password')
         professor = ProfessorGestor(**validated_data)

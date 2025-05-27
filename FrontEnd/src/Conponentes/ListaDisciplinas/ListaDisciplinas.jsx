@@ -1,6 +1,7 @@
 import {useState,useRef,useEffect} from 'react'
 import axios from 'axios'
 import Modal from "../Modal/Modal"
+import "../ListaDisciplinas/ListaDisciplinas.sass"
 
 export default function ListaDisciplinas(){
 
@@ -154,33 +155,50 @@ export default function ListaDisciplinas(){
     },[isEditing,editDisciplina,modalOpen])
 
     return(
-        <div>
-            <h1>Disciplinas da {nome}</h1>
+        <div className='container-disciplinas'>
+                  {userType === "Gestor" ?(
+                            <h1>Disciplinas</h1>
+                    ):(
+                        <>
+                            <h1>Suas Disiciplinas </h1>
+                        </>
+                    )
+                    }
+         
 
-        	<div>
+        	<div className='container-lista-disciplinas'>
                     {userType === "Gestor" &&(
-                        <button onClick={openCreateModal}>Criar Disciplina</button>
+                        <button onClick={openCreateModal} className='btn-create'>Criar Disciplina</button>
                     )}
 
                     <ul>
                         {disciplina.length > 0 ? ( 
                                 disciplina.map(a =>(
-                                    <li key={a.id}>
+                                    <li key={a.id} className='li-disciplinas'>
 
                                             <div className="informations-disciplina">
-                                                <p>Nome: {a.Nome}</p>
-                                                <p>Curso: {a.Curso}</p>
-                                                <p>Carga Horaria: {a.Carga_Horaria}</p>
-                                                <p>Descrição: {a.Descricao}</p>
-                                                <p>Professor: {a.professor_nome}</p>
+                                                <div>
+                                                    <p className='nome-disciplina'> <strong>{a.Nome}</strong></p>
+                                                    <hr />
+                                                    <p>Curso: {a.Curso}</p>
+                                                    <p>Carga Horaria: {a.Carga_Horaria}</p>
+                                                    <p>Descrição: {a.Descricao}</p>
+                                                    <p>Professor: {a.professor_nome}</p>
+                                                </div>
+                                                {userType === "Gestor" && (
+                                                    <>
+                                                        <div className="btns-disciplinas">
+                                                            <button onClick={() => deletarDisciplina(a.id)} className='btn-disciplinas'>
+                                                                <img src="../public/lixeira-de-reciclagem.png" alt="" srcSet="" className="icon-disciplinas"/>                              
+                                                            </button>
+                                                            <button onClick={() => openEditModal(a)} className='btn-disciplinas'>
+                                                                <img src="../public/lapis.png" alt="" srcSet="" className="icon-disciplinas"/>                              
+                                                            </button>
+                                                        </div>
+                                                    </>
+                                                )}
                                             </div>
 
-                                            {userType === "Gestor" && (
-                                                <>
-                                                <button onClick={() => deletarDisciplina(a.id)}>Deletar</button>
-                                                <button onClick={() => openEditModal(a)}>Editar</button>
-                                                </>
-                                            )}
 
                                     </li>
                                 ))
@@ -189,59 +207,6 @@ export default function ListaDisciplinas(){
                             )}
                     </ul>
 
-                {/* {
-                    createModal && (
-                        <div className="modal-disciplinas">
-                            <h2>Criar Disciplina</h2>
-                            <form onSubmit={handleSubmit}>
-                                <p>Nome da disciplina:</p>
-                                <input type="text" ref={NomeRef} required />
-                                <p>Curso:</p>
-                                <input type="text" ref={CursoRef} />
-                                <p>Carga Horaria:</p>
-                                <input type="time" ref={Carga_HorariaRef} />
-                                <p>Descrição:</p>
-                                <textarea ref={DescricaoRef} rows={5} cols={50}/>
-                                <p>Professor responsável:</p>
-
-                                <select ref={Professor_responsavelRef} required>
-                                    <option value="">Selecione um professor</option>
-                                    {professores.map(b => (
-                                            <option key={b.NI} value={b.NI}>{b.Nome}</option>
-                                        ))}
-                                </select>
-                                <button type='submit'>Criar</button>
-                                <button onClick={() => setCreateModal(false)}>Fechar</button>
-                            </form>
-                        </div>
-                    )
-                }
-                
-                {editModal && (
-                        <div className="modal-disciplinas">
-                            <h2>Criar Disciplina</h2>
-                            <form onSubmit={handleEditSbmit}>
-                                <p>Nome da disciplina:</p>
-                                <input type="text" ref={NomeRef}  defaultValue={editModal.Nome} required />
-                                <p>Curso:</p>
-                                <input type="text" ref={CursoRef} defaultValue={editModal.Curso}/>
-                                <p>Carga Horaria:</p>
-                                <input type="time" ref={Carga_HorariaRef} defaultValue={editModal.Carga_Horaria}/>
-                                <p>Descrição:</p>
-                                <textarea ref={DescricaoRef} rows={5} cols={50} defaultValue={editModal.Descricao}/>
-                                <p>Professor responsável:</p>
-
-                                <select ref={Professor_responsavelRef} defaultValue={editModal.Professor_responsavel} required>
-                                    <option value="">Selecione um professor</option>
-                                    {professores.map(b => (
-                                            <option key={b.NI} value={b.NI}>{b.Nome} - {b.NI}</option>
-                                        ))}
-                                </select>
-                                <button type='submit'>Salvar Alterações</button>
-                                <button onClick={() => setCreateModal(false)}>Fechar</button>
-                            </form>
-                        </div>
-                )} */}
 
                 <Modal 
                     isOpen={modalOpen} 
@@ -254,11 +219,11 @@ export default function ListaDisciplinas(){
                     
                     <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
                                 <p>Nome da disciplina:</p>
-                                <input type="text" ref={NomeRef}   required />
+                                <input type="text" ref={NomeRef} placeholder='Digite aqui'  required />
                                 <p>Curso:</p>
-                                <input type="text" ref={CursoRef} />
+                                <input type="text" placeholder='Digite aqui' ref={CursoRef} />
                                 <p>Carga Horaria:</p>
-                                <input type="time" ref={Carga_HorariaRef} />
+                                <input type="time" placeholder='Digite aqui' ref={Carga_HorariaRef} />
                                 <p>Descrição:</p>
                                 <textarea ref={DescricaoRef} rows={5} cols={50} />
                                 <p>Professor responsável:</p>

@@ -2,8 +2,13 @@ import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import "../ListaDiretor/ListaDiretor.sass"
 import Modal from "../Modal/Modal"
+import Swal from "sweetalert2";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
-        
+const schema = z.object({
+    
+})
 
 export default function ListaDiretor() {
    
@@ -44,14 +49,12 @@ export default function ListaDiretor() {
         setTimeout(() => cleanerForm(), 100);
     };
 
-
     const openEditModal = (professor) => {
         setIsEditing(true);
         setEditingProfessor(professor);
         setModalOpen(true);
     };
 
-  
     const closeModal = () => {
         setModalOpen(false);
         setIsEditing(false);
@@ -66,7 +69,6 @@ export default function ListaDiretor() {
         .then(response => setProfessores(response.data))
         .catch(error => setError("Erro ao buscar professores.", error));
     };
-
 
     const handleSubmit = () => {
         
@@ -111,19 +113,29 @@ export default function ListaDiretor() {
     };
 
     const deleteTeacher = (NI) => {
-        if (window.confirm('Tem certeza que deseja deletar este professor?')) {
-            axios.delete(`http://127.0.0.1:8000/professores/${NI}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            })
-            .then(() => {
-                searchTeacher();
-                setMessage({ type: 'success', text: 'Professor deletado com sucesso!' });
-            })
-            .catch(error => {
-                console.error("Erro ao deletar professor:", error);
-                setMessage({ type: 'error', text: 'Erro ao deletar professor.' });
+            Swal.fire({
+                title: "Tem certeza?",
+                text: "Você não poderá reverter esta ação!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Sim, deletar!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    axios.delete(`http://127.0.0.1:8000/professores/${NI}`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    })
+                    .then(() => {
+                        searchTeacher();
+                        Swal.fire("Deletado!", "A sala foi removida com sucesso.", "success");
+                    })
+                    .catch(error => {
+                        console.error("Erro ao deletar sala:", error);
+                        Swal.fire("Erro!", "Não foi possível deletar a sala.", "error");
+                    });
+                }
             });
-        }
     };
 
     useEffect(() => {
@@ -155,17 +167,22 @@ export default function ListaDiretor() {
                 {professores.length > 0 ? (
                     professores.map(prof => (
                         <li key={prof.NI}>
-                            <div className="informations">
-                                <p><strong>Nome: </strong>{prof.Nome} - {prof.Usuario}</p>
-                                <div className="btns">
-                                    <button onClick={() => deleteTeacher(prof.NI)} className="btn">
-                                        <img src="../public/lixeira-de-reciclagem.png" alt="deletar" srcSet="" className="icon"/>
-                                    </button>
-                                    <button onClick={() => openEditModal(prof)} className="btn">
-                                        <img src="../public/lapis.png" alt="deletar" srcSet="" className="icon"/>
-                                    </button>
+                                
+                                <div className="informations">
+                                    <div>
+                                        <p><strong className="Nome-professor-label">{prof.Nome}</strong> - {prof.Usuario}</p>
+                                    </div>
+                                    
+                                    <div className="btns">
+                                        <button onClick={() => deleteTeacher(prof.NI)} className="btn">
+                                            <img src="../public/lixeira-de-reciclagem.png" alt="deletar" srcSet="" className="icon"/>
+                                        </button>
+                                        <button onClick={() => openEditModal(prof)} className="btn">
+                                            <img src="../public/lapis.png" alt="deletar" srcSet="" className="icon"/>
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
+
                         </li>
                     ))
                 ) : (
