@@ -19,7 +19,11 @@ export default function ListaProfesores() {
             console.log(response.data);
             setDados(response.data);
         })
-        .catch(error => console.error("Erro ao buscar professores.",error));
+        .catch(error =>{
+            setError("Erro ao buscar professores.", error)
+            alert("Seu token expirou, clique em 'OK' e volte a tela de Login")
+            navigation("/")
+        } );
     };
 
     useEffect(() => {

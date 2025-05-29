@@ -1,10 +1,18 @@
-import "../Form/Form.sass";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+
 import axios from "axios";
-import Swal from "sweetalert2";
+
+import "../Form/Form.sass";
+
+/**
+ * 
+ * JoaoAdegas
+ * 
+ * 1234
+ */
 
 const schema = z.object({
     username: z.string().min(3, "O nome deve ter pelo menos três caracteres"),

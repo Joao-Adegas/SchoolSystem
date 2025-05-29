@@ -49,7 +49,9 @@ export default function ListaSalas() {
             console.log("Resposta da API Django:", response.data);
             setSala(response.data);
         }).catch(error => {
-            console.error("Erro ao buscar sala:", error);
+            setError("Erro ao buscar professores.", error)
+            alert("Seu token expirou, clique em 'OK' e volte a tela de Login")
+            navigation("/")
         });
     };
 

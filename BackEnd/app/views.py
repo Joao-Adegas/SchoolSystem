@@ -18,8 +18,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 class ProfessorGestorListCreateView(ListCreateAPIView):
     queryset = ProfessorGestor.objects.all()
     serializer_class = ProfessorGestorSerializer
-    permission_classes = [IsGestor]    
-
+    permission_classes = [IsGestor]
+    
     def perform_create(self, serializer):
         new_username = serializer.validated_data.get('username', '').strip()
         if ProfessorGestor.objects.filter(username=new_username).exists():

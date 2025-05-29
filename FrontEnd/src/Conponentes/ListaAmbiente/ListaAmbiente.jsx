@@ -60,7 +60,11 @@ export default function ListaAmbiente() {
             headers: { Authorization: `Bearer ${token}` }
         })
         .then(response => setAmbientes(response.data))
-        .catch(error => setError("Erro ao buscar ambientes.",error));
+        .catch(error =>{
+            setError("Erro ao buscar professores.", error)
+            alert("Seu token expirou, clique em 'OK' e volte a tela de Login")
+            navigation("/")
+        } );
     };
 
     const buscarDisciplinas = () => {
