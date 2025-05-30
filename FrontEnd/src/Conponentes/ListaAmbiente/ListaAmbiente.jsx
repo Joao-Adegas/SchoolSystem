@@ -127,7 +127,11 @@ export default function ListaAmbiente() {
                 setCreateModal(false);
                 buscarAmbientes();
             })
-            .catch(() => setError("Erro ao criar ambiente."));
+            .then(response => response.json())  
+            .then(data => console.log(data))  
+            .catch(error => {
+                setError(error.response.data.erro[0])  
+            })  
         }
 
     };
@@ -142,7 +146,7 @@ export default function ListaAmbiente() {
             console.log(`Ambiente ${id} deletado com sucesso`)
             buscarAmbientes()
         })
-        .cacth(error => {
+        .catch(error => {
             console.error(`Erro ao deletar ambiente ${id} `,error)
         })
     }
@@ -180,10 +184,11 @@ export default function ListaAmbiente() {
                     ambientes.map((a) => (
                         <li key={a.id}>
                             <div className="informations-ambiente">
+                                <p>Sala reservada: <strong>{a.numero_sala}</strong></p>
+                                <hr />
                                 <p>Data de Inicio: <strong>{a.Data_inicio}</strong></p>
                                 <p>Data de término: <strong>{a.Data_termino}</strong></p>
                                 <p>Periodo <strong>{a.Periodo}</strong></p>
-                                <p>Sala reservada: <strong>{a.numero_sala}</strong></p>
                                 <p>Professor responsável: <strong>{a.professor_nome}</strong></p>
 
 
@@ -205,7 +210,7 @@ export default function ListaAmbiente() {
                         </li>
                     ))
                 ) : (
-                    <p>Carregando ambientes...</p>
+                    <p>Não possui Ambientes cadastrados</p>
                 )}
             </ul>
 
@@ -214,10 +219,10 @@ export default function ListaAmbiente() {
                 onClose={closeModal} 
                 className="custom-modal" 
                 overlayClassName="custom-overlay" 
-                ariaHideApp={false}
+                ariaHideApp={   false}
             >
                 <h2>{isEditing ? 'Editar Ambiente' : 'Criar Ambiente'}</h2>
-                
+                {error && <p className="erro-msg">{error}</p>}
                 <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
                         <label>Data de início:</label>
                         <input type="date" ref={dataInicioRef} required />

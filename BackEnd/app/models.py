@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from datetime import datetime
 
 #Ja vem com email e senha
 class ProfessorGestor(AbstractUser):
@@ -19,7 +20,7 @@ class ProfessorGestor(AbstractUser):
 class Disciplina(models.Model):
     Nome = models.CharField(max_length=200)
     Curso = models.CharField(max_length=200)
-    Carga_Horaria = models.TimeField()
+    Carga_Horaria = models.CharField(max_length=10)
     Descricao = models.TextField()
     Professor_responsavel = models.ForeignKey(ProfessorGestor,on_delete=models.CASCADE, limit_choices_to={'Usuario':'Professor'},default=1,blank=True, null=True)
 

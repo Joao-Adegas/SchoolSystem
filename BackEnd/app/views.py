@@ -107,10 +107,23 @@ class SalaRetriveUpdateDestroyApiView(RetrieveUpdateDestroyAPIView):
 
 # Ambiente
 class AmbienteListCreateView(ListCreateAPIView):
-    # queryset = Ambiente.objects.all()
     serializer_class = AmbienteSerializer
     permission_classes = [IsAuthenticated]
     lookup_field = 'pk' 
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        try:
+            serializer.is_valid(raise_exception=True) 
+            return super().create(request,args,kwargs)
+        except Exception as e:
+            print(e)
+            if(serializer.errors):
+                return Response(serializer.errors,status=status.HTTP_409_CONFLICT)
+        
+        # if serializer.errors:  
+        #     return Response(serializer.errors, status=status.HTTP_409_CONFLICT)
+        # return super().create(request, args, kwargs)
 
     def get_queryset(self):
         usuario = self.request.user
@@ -122,15 +135,14 @@ class AmbienteListCreateView(ListCreateAPIView):
         
     def perform_create(self, serializer):
         return serializer.save()
-
+    
+   
 
 class AmbienteRetriverUpdateDestroyApiView(RetrieveUpdateDestroyAPIView):
     queryset = Ambiente.objects.all()
     serializer_class = AmbienteSerializer
     permission_classes = [IsGestor]
     lookup_field = 'pk'
-
-    
 
     def perform_destroy(self, instance):
         return instance.delete()

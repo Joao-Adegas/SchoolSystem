@@ -11,7 +11,7 @@ import "../ListaDiretor/ListaDiretor.sass"
 
 const schema = z.object({
     Nome: z.string().min(3, "O nome deve possuir ao menos 3 letras"),
-    Telefone: z.string().max(15, "O numero de telefone deve ter no maximo 15 digitos").min(10, "O telefone deve ter pelo menos 10 dígitos"),
+    Telefone: z.string().max(11, "O numero de telefone deve ter no maximo 15 digitos").min(10, "O telefone deve ter pelo menos 10 dígitos"),
     Data_de_Nascimento: z.string().min(1, "Data de nascimento é obrigatória"),
     Data_de_contratacao: z.string().min(1, "Data de contratação é obrigatória"),
     username: z.string().min(3, "O nome de usuário deve ter pelo menos 3 caracteres"),
@@ -244,7 +244,7 @@ export default function ListaDiretor() {
                         <input 
                             type="text" 
                             ref={telefoneRef} 
-                            placeholder="(XX) XXXX-XXXX" 
+                            placeholder="Ex: (99) 99999-9999 " 
                             className={`campo-texto ${validationErrors.Telefone ? 'error' : ''}`}
                         />
                         {validationErrors.Telefone && <span className="error-message">{validationErrors.Telefone}</span>}
