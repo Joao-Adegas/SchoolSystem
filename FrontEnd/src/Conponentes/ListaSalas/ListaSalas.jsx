@@ -102,7 +102,7 @@ export default function ListaSalas() {
             confirmButtonText: "Sim, deletar!",
             customClass: {
                 title: "msg-deletar-titulo msg-deletar",
-              }
+            }
         }).then((result) =>{
             if(result.isConfirmed){
 

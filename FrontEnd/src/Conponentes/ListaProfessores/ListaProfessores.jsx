@@ -21,8 +21,6 @@ export default function ListaProfesores() {
         })
         .catch(error =>{
             setError("Erro ao buscar professores.", error)
-            alert("Seu token expirou, clique em 'OK' e volte a tela de Login")
-            navigation("/")
         } );
     };
 

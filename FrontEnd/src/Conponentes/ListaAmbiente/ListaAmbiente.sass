@@ -19,7 +19,6 @@
         border-radius: 0.3rem
         font-family: 'Poppins'
 
-
     .container-informatios
         list-style: none
         display: flex
@@ -32,12 +31,14 @@
             flex-direction: column
             align-items: start
             padding: 1rem
-            display: flex
-            gap: 0.7rem
             background-color: #f4f4f4
             box-shadow: 3px 3px 3px #b9b9b9
             justify-content: space-between
             border-radius: 0.5rem
+
+            .professor-ambiente
+                font-size: 1.2rem
+                color: #1c26b9
 
             .select
                 font-family: 'Poppins'
@@ -72,17 +73,24 @@
 .erro-msg
     color: #ed2121
 
-    form
-        display: flex
-        flex-direction: column
-        gap: 0.5rem
+form
+    display: flex
+    flex-direction: column
+    gap: 0.5rem
 
-        .campo-texto
-            option
-                font-family: 'Poppins'
-        
-        .modal-buttons
-            .btn-create
-                margin: 0 auto
-                width: 10rem
+    .campo-texto
+        option
+            font-family: 'Poppins'
+    
+    .modal-buttons
+        .btn-create
+            margin: 0 auto
+            width: 10rem
 
+.error-message 
+    color: red !important
+    font-size: 0.9em
+    margin-top: 2px
+
+select.error, input.error 
+    border: 1px solid red

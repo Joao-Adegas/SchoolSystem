@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { z } from "zod";
 
 import axios from "axios";
@@ -22,6 +23,12 @@ const schema = z.object({
 export default function Form() {
     const navigate = useNavigate();
 
+    useEffect(() => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user_type");
+        localStorage.removeItem("nome");
+    }, []);
+    
  
     const {
         register,

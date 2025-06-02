@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { useNavigate } from "react-router-dom";
+import { z } from "zod";
 
 import axios from "axios";
 import Modal from "../Modal/Modal"
@@ -11,7 +10,7 @@ import "../ListaDiretor/ListaDiretor.sass"
 
 const schema = z.object({
     Nome: z.string().min(3, "O nome deve possuir ao menos 3 letras"),
-    Telefone: z.string().max(11, "O numero de telefone deve ter no maximo 15 digitos").min(10, "O telefone deve ter pelo menos 10 dígitos"),
+    Telefone: z.string().max(15, "O numero de telefone deve ter no maximo 15 digitos").min(10, "O telefone deve ter pelo menos 10 dígitos"),
     Data_de_Nascimento: z.string().min(1, "Data de nascimento é obrigatória"),
     Data_de_contratacao: z.string().min(1, "Data de contratação é obrigatória"),
     username: z.string().min(3, "O nome de usuário deve ter pelo menos 3 caracteres"),
@@ -24,14 +23,14 @@ export default function ListaDiretor() {
     const navigation = useNavigate()
 
     const [professores, setProfessores] = useState([]);
+    const [validationErrors, setValidationErrors] = useState({});
+
+    const [editingProfessor, setEditingProfessor] = useState(null);
     const [error, setError] = useState(null);
+    const [message, setMessage] = useState(null);
+
     const [modalOpen, setModalOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
-    const [editingProfessor, setEditingProfessor] = useState(null);
-    const [message, setMessage] = useState(null);
-    
-    // Estado para armazenar erros de validação
-    const [validationErrors, setValidationErrors] = useState({});
 
     const nomeRef = useRef();
     const telefoneRef = useRef();
@@ -42,6 +41,7 @@ export default function ListaDiretor() {
     const usuarioRef = useRef();
 
     const cleanerForm = () => {
+
         setTimeout(() => {
             if (nomeRef.current) nomeRef.current.value = '';
             if (telefoneRef.current) telefoneRef.current.value = '';
@@ -52,7 +52,6 @@ export default function ListaDiretor() {
             if (usuarioRef.current) usuarioRef.current.value = 'Professor';
         }, 0);
         
-        // Limpar erros de validação
         setValidationErrors({});
     };
   
@@ -60,6 +59,7 @@ export default function ListaDiretor() {
         setIsEditing(false);
         setEditingProfessor(null);
         setModalOpen(true);
+        setError(null)
         setTimeout(() => cleanerForm(), 100);
     };
 
@@ -67,6 +67,7 @@ export default function ListaDiretor() {
         setIsEditing(true);
         setEditingProfessor(professor);
         setModalOpen(true);
+        setError(null)
         setValidationErrors({});
     };
 
@@ -118,6 +119,11 @@ export default function ListaDiretor() {
             Usuario: usuarioRef.current.value
         };
 
+        const isValid = validateForm(formData);
+        if (!isValid) {
+            setError(null)
+            return;
+        }
 
         if (isEditing) {
             axios.put(`http://127.0.0.1:8000/professores/${editingProfessor.NI}`, formData, {
@@ -142,19 +148,24 @@ export default function ListaDiretor() {
             })
             .catch(error => {
                 console.error("Erro ao criar professor:", error);
+                setError(Object.values(error.response.data)?.[0]?.[0] || "Erro inesperado");
             });
         }
     };
 
     const deleteTeacher = (NI) => {
         Swal.fire({
-            title: "Tem certeza?",
+            title: `Tem certeza?`,
             text: "Você não poderá reverter esta ação!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Sim, deletar!"
+            confirmButtonText: "Sim, deletar!",
+            customClass: {
+                title: "msg-deletar-titulo msg-deletar",
+                text:"msg-deletar"
+            }
         }).then((result) => {
             if (result.isConfirmed) {
                 axios.delete(`http://127.0.0.1:8000/professores/${NI}`, {
@@ -180,7 +191,7 @@ export default function ListaDiretor() {
                 if (dataNascimentoRef.current) dataNascimentoRef.current.value = editingProfessor.Data_de_Nascimento || '';
                 if (dataContratacaoRef.current) dataContratacaoRef.current.value = editingProfessor.Data_de_contratacao || '';
                 if (usernameRef.current) usernameRef.current.value = editingProfessor.username || '';
-                if (passwordRef.current) passwordRef.current.value = editingProfessor.password || '';
+                if (passwordRef.current) passwordRef.current.value = '';
                 if (usuarioRef.current) usuarioRef.current.value = editingProfessor.Usuario || 'Professor';
             }, 100);
         }
@@ -228,7 +239,7 @@ export default function ListaDiretor() {
                 ariaHideApp={false}
             >
                 <h2>{isEditing ? 'Editar Professor/Gestor' : 'Criar Professor/Gestor'}</h2>
-                
+                {error && <p className="erro-msg">{error}</p>}
                 <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
                     <label>Nome:
                         <input 

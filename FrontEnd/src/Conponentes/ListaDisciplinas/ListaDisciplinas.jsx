@@ -81,7 +81,6 @@ export default function ListaDisciplinas(){
     }
 
     const handleSubmit = () => {
-       
 
         const formData = {
             Nome:NomeRef.current.value,
@@ -180,10 +179,10 @@ export default function ListaDisciplinas(){
                                                 <div>
                                                     <p className='nome-disciplina'> <strong>{a.Nome}</strong></p>
                                                     <hr />
-                                                    <p>Curso: {a.Curso}</p>
+                                                    <p>Curso: <strong>{a.Curso}</strong></p>
                                                     <p>Carga Horaria: {a.Carga_Horaria}</p>
                                                     <p>Descrição: {a.Descricao}</p>
-                                                    <p>Professor: {a.professor_nome}</p>
+                                                    <p>Professor: <strong>{a.professor_nome}</strong></p>
                                                 </div>
                                                 {userType === "Gestor" && (
                                                     <>
