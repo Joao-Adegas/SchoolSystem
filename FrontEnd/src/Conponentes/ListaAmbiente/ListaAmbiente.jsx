@@ -77,8 +77,6 @@ export default function ListaAmbiente() {
         .then(response => setAmbientes(response.data))
         .catch(error =>{
             setError("Erro ao buscar professores.", error)
-            alert("Seu token expirou, clique em 'OK' e volte a tela de Login")
-            navigation("/")
         } );
     };
 
