@@ -12,7 +12,7 @@ export default function ListaProfesores() {
 
     const buscarProfessores = () => {
 
-        axios.get("http://127.0.0.1:8000/professores/", {
+        axios.get("http://localhost:8000/professores/", {
             headers: { Authorization: `Bearer ${token}` }
         })
         .then(response => {

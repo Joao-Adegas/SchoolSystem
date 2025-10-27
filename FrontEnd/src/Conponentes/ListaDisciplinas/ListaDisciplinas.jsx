@@ -54,7 +54,7 @@ export default function ListaDisciplinas(){
     }
 
     const buscarDisciplina = () => {
-        axios.get(`http://127.0.0.1:8000/disciplina/`,{
+        axios.get(`http://localhost:8000/disciplina/`,{
             headers:{
                 Authorization:`Bearer ${token}`
             }
@@ -69,7 +69,7 @@ export default function ListaDisciplinas(){
     }
 
     const listarProfessores = () =>{
-        axios.get("http://127.0.0.1:8000/professores/",{
+        axios.get("http://localhost:8000/professores/",{
             headers:{
                 Authorization:`Bearer ${token}`
             }
@@ -91,7 +91,7 @@ export default function ListaDisciplinas(){
         }
 
         if(isEditing){
-            axios.put(`http://127.0.0.1:8000/disciplina/${editDisciplina.id}`,formData,{
+            axios.put(`http://localhost:8000/disciplina/${editDisciplina.id}`,formData,{
             headers:{
                 Authorization:`Bearer ${token}`
             }
@@ -106,7 +106,7 @@ export default function ListaDisciplinas(){
         }
         else{
 
-            axios.post("http://127.0.0.1:8000/disciplina/",formData,{
+            axios.post("http://localhost:8000/disciplina/",formData,{
                 headers:{
                     Authorization:`Bearer ${token}`
                 }
@@ -124,7 +124,7 @@ export default function ListaDisciplinas(){
     }
 
     const deletarDisciplina = (id) =>{
-        axios.delete(`http://127.0.0.1:8000/disciplina/${id}`,{
+        axios.delete(`http://localhost:8000/disciplina/${id}`,{
             headers:{
                 Authorization:`Bearer ${token}`
             }

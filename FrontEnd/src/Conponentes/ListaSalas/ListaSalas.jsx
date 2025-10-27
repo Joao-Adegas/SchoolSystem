@@ -43,7 +43,7 @@ export default function ListaSalas() {
 
     const buscarSala = () => {
       
-        axios.get("http://127.0.0.1:8000/sala/", {
+        axios.get("http://localhost:8000/sala/", {
             headers: { Authorization: `Bearer ${token}` }
         }).then(response => {
             console.log("Resposta da API Django:", response.data);
@@ -62,7 +62,7 @@ export default function ListaSalas() {
         }
 
         if(isEditing){
-            axios.put(`http://127.0.0.1:8000/sala/${editSala.id}`,formData,{
+            axios.put(`http://localhost:8000/sala/${editSala.id}`,formData,{
                 headers:{
                     Authorization:`Bearer ${token}`
                 }
@@ -77,7 +77,7 @@ export default function ListaSalas() {
         }
         else{
 
-            axios.post("http://127.0.0.1:8000/sala/", formData, {
+            axios.post("http://localhost:8000/sala/", formData, {
                 headers: { Authorization: `Bearer ${token}` }
             }).then(response => {
                 console.log(response.data.results);
@@ -106,7 +106,7 @@ export default function ListaSalas() {
         }).then((result) =>{
             if(result.isConfirmed){
 
-                axios.delete(`http://127.0.0.1:8000/sala/${id}`, {
+                axios.delete(`http://localhost:8000/sala/${id}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 }).then(response => {
                     buscarSala()

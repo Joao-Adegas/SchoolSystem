@@ -79,7 +79,7 @@ export default function ListaDiretor() {
     };
 
     const searchTeacher = () => {
-        axios.get("http://127.0.0.1:8000/professores/", {
+        axios.get("http://localhost:8000/professores/", {
             headers: { Authorization: `Bearer ${token}` }
         })
         .then(response => setProfessores(response.data))
@@ -126,7 +126,7 @@ export default function ListaDiretor() {
         }
 
         if (isEditing) {
-            axios.put(`http://127.0.0.1:8000/professores/${editingProfessor.NI}`, formData, {
+            axios.put(`http://localhost:8000/professores/${editingProfessor.NI}`, formData, {
                 headers: { Authorization: `Bearer ${token}` }
             })
             .then(() => {
@@ -139,7 +139,7 @@ export default function ListaDiretor() {
                 
             });
         } else {
-            axios.post("http://127.0.0.1:8000/professores/", formData, {
+            axios.post("http://localhost:8000/professores/", formData, {
                 headers: { Authorization: `Bearer ${token}` }
             })
             .then(() => {
@@ -168,7 +168,7 @@ export default function ListaDiretor() {
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(`http://127.0.0.1:8000/professores/${NI}`, {
+                axios.delete(`http://localhost:8000/professores/${NI}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 })
                 .then(() => {

@@ -40,8 +40,8 @@ export default function Form() {
 
     const handleLogin = async (data) => {
         try {
-            const response = await axios.post("http://127.0.0.1:8000/token/", data);
-
+            const response = await axios.post("http://localhost:8000/token/", data);
+            withCredentials: true;
             if (response.data.access) {
                 localStorage.setItem("token", response.data.access);
                 localStorage.setItem("user_type", response.data.usuario.tipo);

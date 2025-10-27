@@ -71,7 +71,7 @@ export default function ListaAmbiente() {
     }
 
     const buscarAmbientes = () => {
-        axios.get("http://127.0.0.1:8000/reservaAmbiente/", {
+        axios.get("http://localhost:8000/reservaAmbiente/", {
             headers: { Authorization: `Bearer ${token}` }
         })
         .then(response => setAmbientes(response.data))
@@ -81,7 +81,7 @@ export default function ListaAmbiente() {
     };
 
     const buscarDisciplinas = () => {
-        axios.get("http://127.0.0.1:8000/disciplina/",{
+        axios.get("http://localhost:8000/disciplina/",{
             headers:{Authorization: `Bearer ${token}`}
         })
         .then(response => {console.log("Disciplinas recebidas:", response.data); setDisciplina(response.data)})
@@ -89,7 +89,7 @@ export default function ListaAmbiente() {
     }
 
     const buscarSalas = () => {
-        axios.get("http://127.0.0.1:8000/sala/", {
+        axios.get("http://localhost:8000/sala/", {
             headers: { Authorization: `Bearer ${token}` }
         })
         .then(response => setSalas(response.data))
@@ -97,7 +97,7 @@ export default function ListaAmbiente() {
     };
 
     const buscarProfessores = () => {
-        axios.get("http://127.0.0.1:8000/professores/", {
+        axios.get("http://localhost:8000/professores/", {
             headers: { Authorization: `Bearer ${token}` }
         })
         .then(response => setProfessores(response.data))
@@ -139,7 +139,7 @@ export default function ListaAmbiente() {
         }
 
         if (isEditing) {
-            axios.put(`http://127.0.0.1:8000/reservaAmbiente/${editAmbiente.id}`, formData, { 
+            axios.put(`http://localhost:8000/reservaAmbiente/${editAmbiente.id}`, formData, { 
                 headers: { Authorization: `Bearer ${token}` }
             })
             .then(() => {
@@ -151,7 +151,7 @@ export default function ListaAmbiente() {
                 console.error(`Erro ao editar ambiente: `, error);
             });
         } else {
-            axios.post("http://127.0.0.1:8000/reservaAmbiente/", formData, {
+            axios.post("http://localhost:8000/reservaAmbiente/", formData, {
                 headers: { Authorization: `Bearer ${token}` }
             })
             .then(() => {
@@ -166,7 +166,7 @@ export default function ListaAmbiente() {
     };
 
     const deletarAmbiente = (id) =>{
-        axios.delete(`http://127.0.0.1:8000/reservaAmbiente/${id}`,{
+        axios.delete(`http://localhost:8000/reservaAmbiente/${id}`,{
             headers:{
                 Authorization:`Bearer ${token}`
             }
