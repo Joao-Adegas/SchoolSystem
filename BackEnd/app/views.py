@@ -13,8 +13,19 @@ from rest_framework.exceptions import ValidationError
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 
-# ProfessorGestor
+from rest_framework.views import APIView
 
+
+
+class ProfessorLogadoView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        serializer = ProfessorGestorSerializer(request.user)
+        return Response(serializer.data)
+
+
+# ProfessorGestor
 class ProfessorGestorListCreateView(ListCreateAPIView):
     queryset = ProfessorGestor.objects.all()
     serializer_class = ProfessorGestorSerializer
@@ -78,6 +89,12 @@ class DisciplinaRetriverUpdateDestryAPIView(RetrieveUpdateDestroyAPIView):
     
 
 # Sala
+
+class SalaListApiView(ListAPIView):
+    queryset = Sala.objects.all()
+    serializer_class = SalaSerializer
+    permission_classes = [IsAuthenticated]
+
 class SalaListCreateAPIView(ListCreateAPIView):
     queryset = Sala.objects.all()
     serializer_class = SalaSerializer
@@ -91,7 +108,7 @@ class SalaListCreateAPIView(ListCreateAPIView):
 class SalaRetriveUpdateDestroyApiView(RetrieveUpdateDestroyAPIView):
     queryset = Sala.objects.all()
     serializer_class = SalaSerializer
-    permission_classes = [IsGestor]
+    permission_classes = [IsAuthenticated]
     lookup_field = 'pk'
 
     def perform_destroy(self, instance):
@@ -141,7 +158,7 @@ class AmbienteListCreateView(ListCreateAPIView):
 class AmbienteRetriverUpdateDestroyApiView(RetrieveUpdateDestroyAPIView):
     queryset = Ambiente.objects.all()
     serializer_class = AmbienteSerializer
-    permission_classes = [IsGestor]
+    permission_classes = [IsAuthenticated]
     lookup_field = 'pk'
 
     def perform_destroy(self, instance):

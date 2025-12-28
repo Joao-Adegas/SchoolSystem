@@ -11,11 +11,19 @@ import re
 
 User = get_user_model()
 
+class DisciplinaResumoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Disciplina
+        fields = ['id', 'Nome']
+
+
 class ProfessorGestorSerializer(serializers.ModelSerializer):
+
+    disciplinas = DisciplinaResumoSerializer(source="disciplina_set",many=True,read_only=True)
 
     class Meta:
         model = ProfessorGestor
-        fields = ['NI','Nome','Telefone','Data_de_Nascimento','Data_de_contratacao','Usuario','username','password']
+        fields = ['NI','Nome','email','Telefone','Data_de_Nascimento','Data_de_contratacao','Usuario','username','password','disciplinas']
 
     def validate(self, data):
         data_nascimento = data.get('Data_de_Nascimento')
@@ -39,13 +47,6 @@ class ProfessorGestorSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({"Data_de_Nascimento": "O usuário deve ter pelo menos 18 anos."})
 
         return data
-
-    def validate_Telefone(self, value):
-        telefone_regex = r'^\(\d{2}\) \d{4,5}-\d{4}$' 
-        if not re.match(telefone_regex, value):
-            raise serializers.ValidationError("O número de telefone deve estar no formato (XX) XXXXX-XXXX.")
-        return value
-
 
     def create(self, validated_data):
         password = validated_data.pop('password')

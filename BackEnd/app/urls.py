@@ -16,6 +16,10 @@ urlpatterns = [
 
     path('sala/',view=views.SalaListCreateAPIView.as_view(),name='listar_criar_Sala'),
     path('sala/<int:pk>',view=views.SalaRetriveUpdateDestroyApiView.as_view(),name='atualizar_deletar_vizualizar'),
+    path('salas/',view=views.SalaListApiView.as_view(),name='atualizar_deletar_vizualizar'),
 
-    path('professorDisciplinas/',view=views.ListDisciplinasProfessor.as_view(),name='ver_disciplinas_do_professor'),   
+    path('professorDisciplinas/',view=views.ListDisciplinasProfessor.as_view(),name='ver_disciplinas_do_professor'), 
+
+    path('professores/me/', view=views.ProfessorLogadoView.as_view(), name='professor_logado')
+  
 ]

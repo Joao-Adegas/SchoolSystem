@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
-
+import { Plus,Trash,Pen } from "lucide-react";
 import axios from "axios";
 import Modal from "../Modal/Modal"
 import Swal from "sweetalert2";
@@ -39,6 +39,7 @@ export default function ListaDiretor() {
     const usernameRef = useRef();
     const passwordRef = useRef();
     const usuarioRef = useRef();
+    const emailRef = useRef();
 
     const cleanerForm = () => {
 
@@ -51,10 +52,10 @@ export default function ListaDiretor() {
             if (passwordRef.current) passwordRef.current.value = '';
             if (usuarioRef.current) usuarioRef.current.value = 'Professor';
         }, 0);
-        
+
         setValidationErrors({});
     };
-  
+
     const openCreateModal = () => {
         setIsEditing(false);
         setEditingProfessor(null);
@@ -82,12 +83,12 @@ export default function ListaDiretor() {
         axios.get("http://localhost:8000/professores/", {
             headers: { Authorization: `Bearer ${token}` }
         })
-        .then(response => setProfessores(response.data))
-        .catch(error =>{
-            setError("Erro ao buscar professores.", error)
-            alert("Seu token expirou, clique em 'OK' e volte a tela de Login")
-            navigation("/")
-        } );
+            .then(response => setProfessores(response.data))
+            .catch(error => {
+                setError("Erro ao buscar professores.", error)
+                alert("Seu token expirou, clique em 'OK' e volte a tela de Login")
+                navigation("/")
+            });
     };
 
     const validateForm = (formData) => {
@@ -115,6 +116,7 @@ export default function ListaDiretor() {
             Data_de_Nascimento: dataNascimentoRef.current.value,
             Data_de_contratacao: dataContratacaoRef.current.value,
             username: usernameRef.current.value,
+            email: emailRef.current.value,
             password: passwordRef.current.value,
             Usuario: usuarioRef.current.value
         };
@@ -129,27 +131,27 @@ export default function ListaDiretor() {
             axios.put(`http://localhost:8000/professores/${editingProfessor.NI}`, formData, {
                 headers: { Authorization: `Bearer ${token}` }
             })
-            .then(() => {
-                searchTeacher();
-                closeModal();
-                
-            })
-            .catch(error => {
-                console.error("Erro ao editar professor:", error);
-                
-            });
+                .then(() => {
+                    searchTeacher();
+                    closeModal();
+
+                })
+                .catch(error => {
+                    console.error("Erro ao editar professor:", error);
+
+                });
         } else {
             axios.post("http://localhost:8000/professores/", formData, {
                 headers: { Authorization: `Bearer ${token}` }
             })
-            .then(() => {
-                searchTeacher();
-                closeModal();
-            })
-            .catch(error => {
-                console.error("Erro ao criar professor:", error);
-                setError(Object.values(error.response.data)?.[0]?.[0] || "Erro inesperado");
-            });
+                .then(() => {
+                    searchTeacher();
+                    closeModal();
+                })
+                .catch(error => {
+                    console.error("Erro ao criar professor:", error);
+                    setError(Object.values(error.response.data)?.[0]?.[0] || "Erro inesperado");
+                });
         }
     };
 
@@ -164,21 +166,21 @@ export default function ListaDiretor() {
             confirmButtonText: "Sim, deletar!",
             customClass: {
                 title: "msg-deletar-titulo msg-deletar",
-                text:"msg-deletar"
+                text: "msg-deletar"
             }
         }).then((result) => {
             if (result.isConfirmed) {
                 axios.delete(`http://localhost:8000/professores/${NI}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 })
-                .then(() => {
-                    searchTeacher();
-                    Swal.fire("Deletado!", "O professor foi removido com sucesso.", "success");
-                })
-                .catch(error => {
-                    console.error("Erro ao deletar professor:", error);
-                    Swal.fire("Erro!", "Não foi possível deletar o professor.", "error");
-                });
+                    .then(() => {
+                        searchTeacher();
+                        Swal.fire("Deletado!", "O professor foi removido com sucesso.", "success");
+                    })
+                    .catch(error => {
+                        console.error("Erro ao deletar professor:", error);
+                        Swal.fire("Erro!", "Não foi possível deletar o professor.", "error");
+                    });
             }
         });
     };
@@ -188,6 +190,7 @@ export default function ListaDiretor() {
             setTimeout(() => {
                 if (nomeRef.current) nomeRef.current.value = editingProfessor.Nome || '';
                 if (telefoneRef.current) telefoneRef.current.value = editingProfessor.Telefone || '';
+                if (emailRef.current) emailRef.current.value = editingProfessor.email || '';
                 if (dataNascimentoRef.current) dataNascimentoRef.current.value = editingProfessor.Data_de_Nascimento || '';
                 if (dataContratacaoRef.current) dataContratacaoRef.current.value = editingProfessor.Data_de_contratacao || '';
                 if (usernameRef.current) usernameRef.current.value = editingProfessor.username || '';
@@ -202,120 +205,149 @@ export default function ListaDiretor() {
     }, []);
 
     return (
-        <div className="container-diretor">
-            <h1>Lista de Funcionários</h1>
-            <button onClick={openCreateModal} className="btn-create">NOVO FUNCIONÁRIO</button>
-            
-            <ul>
-                {professores.length > 0 ? (
-                    professores.map(prof => (
-                        <li key={prof.NI}>
-                            <div className="informations">
-                                <div>
-                                    <p><strong className="Nome-professor-label">{prof.Nome}</strong> - {prof.Usuario}</p>
-                                </div>
-                                
-                                <div className="btns">
-                                    <button onClick={() => deleteTeacher(prof.NI)} className="btn">
-                                        <img src="../public/lixeira-de-reciclagem.png" alt="deletar" className="icon"/>
-                                    </button>
-                                    <button onClick={() => openEditModal(prof)} className="btn">
-                                        <img src="../public/lapis.png" alt="editar" className="icon"/>
-                                    </button>
-                                </div>
-                            </div>
-                        </li>
-                    ))
-                ) : (
-                    <p>Você não possui permissão para entrar</p>
-                )}
-            </ul>
+        <section className="container-ambiente">
+            <div className="top">
+                <div className="left">
+                    <h1>Funcionários</h1>
+                    <p>Gerencie os funcionários e suas informações no sistema</p>
+                </div>
 
-            <Modal 
-                isOpen={modalOpen} 
-                onClose={closeModal} 
-                className="custom-modal" 
-                overlayClassName="custom-overlay" 
+                <div className="right">
+                    <button onClick={openCreateModal} className='btn-create-ambiente'> <Plus />  <span>Adicionar Funcionário</span></button>
+                </div>
+            </div>
+
+            <div className="container-table">
+                <table className="ambiente-table">
+                    <thead>
+                        <tr>
+                            <th>NI</th>
+                            <th>Nome</th>
+                            <th>Telefone</th>
+                            <th>Data Nascimento</th>
+                            <th>Data Contratação</th>
+                            <th>Usuário</th>
+                            <th>Email</th>
+                            <th>Tipo</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+
+
+                    <tbody>
+                        {professores.length > 0 ? (
+                            professores.map((a) => (
+                                <tr key={a.NI}>
+                                    <td>{a.NI}</td>  
+                                    <td>{a.Nome}</td>
+                                    <td>{a.Telefone}</td>
+                                    <td>{a.Data_de_Nascimento}</td>
+                                    <td>{a.Data_de_contratacao}</td>
+                                    <td>{a.username}</td>
+                                    <td>{a.email}</td>
+                                    <td>{a.Usuario}</td>
+                                    
+                                    <td>
+                                        <div className="actions">
+                                            <button className="edit" onClick={() => openEditModal(a)}> <Pen size={20} /> </button>
+                                            <button className="delete" onClick={() => deleteTeacher(a.NI)}> <Trash size={20} /> </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="6" className="empty-table">
+                                    Nenhum Ambiente Reservado
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+
+            </div>
+
+
+
+            <Modal
+                isOpen={modalOpen}
+                onClose={closeModal}
+                className="custom-modal"
+                overlayClassName="custom-overlay"
                 ariaHideApp={false}
             >
-                <h2>{isEditing ? 'Editar Professor/Gestor' : 'Criar Professor/Gestor'}</h2>
+
+                <h2>{isEditing ? 'Editar Funcionário' : 'Criar Funcionário'}</h2>
                 {error && <p className="erro-msg">{error}</p>}
                 <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
-                    <label>Nome:
-                        <input 
-                            type="text" 
-                            ref={nomeRef}  
-                            placeholder="Digite aqui"
-                            className={`campo-texto ${validationErrors.Nome ? 'error' : ''}`}
-                        />
-                        {validationErrors.Nome && <span className="error-message">{validationErrors.Nome}</span>}
-                    </label>
+                    <label>Nome</label>
+                    <input type="text" ref={nomeRef} />
 
-                    <label>Telefone:
-                        <input 
-                            type="text" 
-                            ref={telefoneRef} 
-                            placeholder="Ex: (99) 99999-9999 " 
-                            className={`campo-texto ${validationErrors.Telefone ? 'error' : ''}`}
-                        />
-                        {validationErrors.Telefone && <span className="error-message">{validationErrors.Telefone}</span>}
-                    </label>
+                    <label>Telefone</label>
+                    <input type="text" ref={telefoneRef} />
 
-                    <label>Data de nascimento:
-                        <input 
-                            type="date" 
-                            ref={dataNascimentoRef}  
-                            className={`campo-texto ${validationErrors.Data_de_Nascimento ? 'error' : ''}`}
-                        />
-                        {validationErrors.Data_de_Nascimento && <span className="error-message">{validationErrors.Data_de_Nascimento}</span>}
-                    </label>
-                    
-                    <label>Data de contratação:
-                        <input 
-                            type="date" 
-                            ref={dataContratacaoRef}  
-                            className={`campo-texto ${validationErrors.Data_de_contratacao ? 'error' : ''}`}
-                        />
-                        {validationErrors.Data_de_contratacao && <span className="error-message">{validationErrors.Data_de_contratacao}</span>}
-                    </label>
+                    <label>Data de nascimento</label>
+                    <input
+                        type="date"
+                        ref={dataNascimentoRef}
+                        className={`campo-texto ${validationErrors.Data_de_Nascimento ? 'error' : ''}`}
+                    />
 
-                    <label>Usuário:
-                        <input 
-                            type="text" 
-                            ref={usernameRef}  
-                            placeholder="Digite aqui" 
-                            className={`campo-texto ${validationErrors.username ? 'error' : ''}`}
-                        />
-                        {validationErrors.username && <span className="error-message">{validationErrors.username}</span>}
-                    </label>
+                    {validationErrors.Data_de_Nascimento && <p className="error-message">{validationErrors.Data_de_Nascimento}</p>}
 
-                    <label>Senha:
-                        <input 
-                            type="password" 
-                            ref={passwordRef}  
-                            placeholder="Digite aqui" 
-                            className={`campo-texto ${validationErrors.password ? 'error' : ''}`}
-                        />
-                        {validationErrors.password && <span className="error-message">{validationErrors.password}</span>}
-                    </label>
+                    <label>Data de contratação:</label>
+                    <input
+                        type="date"
+                        ref={dataContratacaoRef}
+                        className={`campo-texto ${validationErrors.Data_de_contratacao ? 'error' : ''}`}
+                    />
+                    {validationErrors.Data_de_contratacao && <p className="error-message">{validationErrors.Data_de_contratacao}</p>}
 
-                    <label>Tipo:</label>
-                    <select 
-                        ref={usuarioRef} 
+                    <label>Usuário:</label>
+                    <input
+                        type="text"
+                        ref={usernameRef}
+                        placeholder="Digite aqui"
+                        className={`campo-texto ${validationErrors.username ? 'error' : ''}`}
+                    />
+
+                    {validationErrors.username && <p className="error-message">{validationErrors.username}</p>}
+
+
+                    <label htmlFor="">Email</label>
+                    <input
+                        type="email"
+                        ref={emailRef}
+                        placeholder="Digite aqui"
+                        className={`campo-texto ${validationErrors.email ? 'error' : ''}`}
+                    />
+
+                    <label >Senha</label>
+                    <input
+                        type="password"
+                        ref={passwordRef}
+                        placeholder="********"
+                        className={`campo-texto ${validationErrors.password ? 'error' : ''}`}
+                    />
+                    <label htmlFor="">Tipo</label>
+                    <select
+                        ref={usuarioRef}
                         className={`campo-texto ${validationErrors.Usuario ? 'error' : ''}`}
                     >
                         <option value="Professor">Professor</option>
                         <option value="Gestor">Gestor</option>
                     </select>
                     {validationErrors.Usuario && <span className="error-message">{validationErrors.Usuario}</span>}
-                    
-                    <div className="modal-buttons">
-                        <button type="submit" className="btn-create">
-                            {isEditing ? 'Salvar Alterações' : 'Criar'}
-                        </button>
+
+
+                    <div className="btns">
+                        <button onClick={closeModal} className="btn-cancalar" >Cancelar</button>
+                        <button type="submit">{isEditing ? 'Salvar Alterações' : 'Criar Ambiente'}</button>
                     </div>
                 </form>
             </Modal>
-        </div>
+
+
+        </section>
     )
 }
