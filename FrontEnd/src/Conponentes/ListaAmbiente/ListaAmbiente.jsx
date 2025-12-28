@@ -414,7 +414,7 @@ export default function ListaAmbiente() {
 
                     <label>Sala Reservada:</label>
                     <select ref={salaReservadaRef} className={validationErrors.Sala_reservada ? "error" : ""}>
-                        <option value="">Selecione uma sala</option>
+                        <option value="" className="option">Selecione uma sala</option>
                         {salas.map(sala => (
                             <option key={sala.id} value={sala.id}>{sala.numero}</option>
                         ))}
@@ -450,19 +450,19 @@ export default function ListaAmbiente() {
                 <form onSubmit={(e) => { e.preventDefault(); handleSubmitSalas(); }}>
 
                     <label>Numero Da Sala:
-                        <input type="number" ref={numeroRef} required placeholder="Digite aqui" />
+                        <input type="number" ref={numeroRef} placeholder="Digite aqui" />
                     </label>
 
 
-                    <div className="modal-buttons">
+                    <div className="btns">
 
+                        <button className='btn-cancalar' onClick={closeModal}>
+                            Cancelar
+                        </button>
                         <button type="submit" className="btn-create">
                             {isEditing ? 'Salvar Alterações' : 'Criar'}
                         </button>
 
-                        <button className='btn-create close-btn' onClick={closeModal}>
-                            Cancelar
-                        </button>
 
                     </div>
 

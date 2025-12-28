@@ -242,9 +242,9 @@ export default function ListaDisciplinas() {
                     <p>Nome da disciplina:</p>
                     <input type="text" ref={NomeRef} placeholder='Digite aqui' required />
                     <p>Curso:</p>
-                    <input type="text" placeholder='Digite aqui' ref={CursoRef} />
+                    <input type="text" placeholder='Digite aqui' ref={CursoRef} required />
                     <p>Carga Horaria:</p>
-                    <input type="text" placeholder='Digite aqui' ref={Carga_HorariaRef} />
+                    <input type="text" placeholder='Digite aqui' ref={Carga_HorariaRef} required/>
                     <p>Descrição:</p>
                     <textarea ref={DescricaoRef} rows={5} cols={50} />
                     <p>Professor responsável:</p>

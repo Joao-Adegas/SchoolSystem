@@ -5,15 +5,7 @@ import { useEffect, useState } from "react";
 import { z } from "zod";
 import { GraduationCap } from "lucide-react";
 import axios from "axios";
-
 import "../Form/Form.sass";
-
-/**
- * 
- * JoaoAdegas
- * 
- @jpadegas2005
- */
 
 const schema = z.object({
     username: z.string().min(3, "O nome deve ter pelo menos três caracteres"),
@@ -22,15 +14,15 @@ const schema = z.object({
 
 export default function Form() {
     const navigate = useNavigate();
-    const [loading,setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         localStorage.removeItem("token");
         localStorage.removeItem("user_type");
         localStorage.removeItem("nome");
     }, []);
-    
- 
+
+
     const {
         register,
         handleSubmit,
@@ -40,30 +32,28 @@ export default function Form() {
     });
 
     const handleLogin = async (data) => {
+        setLoading(true);
         try {
-            const response = await axios.post("http://localhost:8000/token/", data);
-            withCredentials: true;
+            const response = await axios.post("http://localhost:8000/token/", data, { withCredentials: true });
+
             if (response.data.access) {
                 localStorage.setItem("token", response.data.access);
                 localStorage.setItem("user_type", response.data.usuario.tipo);
                 localStorage.setItem("nome", response.data.usuario.nome);
-                console.log("Nome: " ,response.data.usuario.nome);
-                console.log("Username:", response.data.usuario.username);
-                console.log("Tipo Usuario:", response.data.usuario.tipo);
-                console.log("Nome:", response.data.usuario.nome);
-                console.log("Token recebido:", response.data.access);
-
                 navigate("/professores");
             } else {
                 alert("Credenciais inválidas");
             }
         } catch (error) {
             alert("Erro ao fazer login");
+        } finally {
+            setLoading(false); 
         }
+
     };
 
     return (
-       <div className="container-login">
+        <div className="container-login">
 
             <div className="background-login">
 
