@@ -40,6 +40,8 @@ export default function Form() {
                 localStorage.setItem("token", response.data.access);
                 localStorage.setItem("user_type", response.data.usuario.tipo);
                 localStorage.setItem("nome", response.data.usuario.nome);
+                localStorage.setItem("ni", response.data.usuario.NI);
+                
                 navigate("/professores");
             } else {
                 alert("Credenciais inválidas");

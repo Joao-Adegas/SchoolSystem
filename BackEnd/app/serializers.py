@@ -147,7 +147,8 @@ class LoginSerializer(TokenObtainPairSerializer):
         data['usuario'] = {
             'username':self.user.username,
             'tipo':self.user.Usuario,
-            'nome':self.user.Nome
+            'nome':self.user.Nome,
+            'NI':self.user.NI
         }
 
         return data

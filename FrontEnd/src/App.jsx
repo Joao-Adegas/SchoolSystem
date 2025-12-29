@@ -17,16 +17,19 @@ import "./App.sass"
 
 function App() {
 
+  const token = localStorage.getItem("token");
+
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
         <Route element={<Layout />} >
-          <Route path="/professores" element={<Professores/>} />
-          <Route path="/disciplinas" element={<Disciplinas/>} />
-          <Route path="/ambientes" element={<Ambientes/>} />
-          <Route path="/diretor" element={<Diretor/>} />
-          <Route path="/salas" element={<Sala/>} />
+          <Route path="/professores" element={<Professores />} />
+          <Route path="/professores/:id" element={<Professores />} />
+          <Route path="/disciplinas/:id" element={<Disciplinas />} />
+          <Route path="/ambientes/:id" element={<Ambientes />} />
+          <Route path="/diretor/:id" element={<Diretor />} />
+          <Route path="/salas/:id" element={<Sala />} />
         </Route>
       </Routes>
     </BrowserRouter>

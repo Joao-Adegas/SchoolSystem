@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { z } from "zod";
 import { Plus,Trash,Pen } from "lucide-react";
 import axios from "axios";
@@ -21,6 +21,7 @@ const schema = z.object({
 export default function ListaDiretor() {
     const token = localStorage.getItem("token");
     const navigation = useNavigate()
+    const {NI} = useParams();
 
     const [professores, setProfessores] = useState([]);
     const [validationErrors, setValidationErrors] = useState({});

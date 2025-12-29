@@ -12,7 +12,7 @@ export default function Diretor() {
                 title: `Acesso Negado`,
                 text: "Necessita do token para continuar",
                 icon: "warning",
-                confirmButtonColor: "#3085d6",
+                confirmButtonColor: "#000000ff",
                 confirmButtonText: "OK",
                 customClass: {
                     title: "msg-deletar-titulo msg-deletar",
