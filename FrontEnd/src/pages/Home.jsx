@@ -1,5 +1,5 @@
-import { Conteudo } from "../Conponentes/Conteudo/Conteudo";
-import ListaProfesores from "../Conponentes/ListaProfessores/ListaProfessores";
+import { Conteudo } from "../components/Conteudo/Conteudo";
+import ListaProfesores from "../components/ListaProfessores/ListaProfessores";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";

@@ -1,4 +1,4 @@
-import ListaAmbiente  from "../Conponentes/ListaAmbiente/ListaAmbiente"
+import ListaAmbiente  from "../components/ListaAmbiente/ListaAmbiente"
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";

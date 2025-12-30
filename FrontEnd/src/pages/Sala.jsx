@@ -1,4 +1,4 @@
-import ListaSalas from "../Conponentes/ListaSalas/ListaSalas"
+import ListaSalas from "../components/ListaSalas/ListaSalas"
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";

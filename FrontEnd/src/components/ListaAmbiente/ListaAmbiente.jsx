@@ -20,17 +20,20 @@ export default function ListaAmbiente() {
 
     const [ambientes, setAmbientes] = useState([]);
     const [salas, setSalas] = useState([]);
-    const [editSala, setEditSala] = useState(null)
     const [disciplina, setDisciplina] = useState([])
     const [professores, setProfessores] = useState([]);
 
     const [isEditing, setIsEditing] = useState(false)
+    const [editAmbiente, setEditAmbiente] = useState(null)
+
     const [modalOpen, setModalOpen] = useState(false)
     const [modalOpenSalas, setModalOpenSalas] = useState(false);
-    const [editingSala, isEditingSala] = useState(false);
+
+    const [isEditingSala, setIsEditingSala] = useState(false);
+    const [salaEmEdicao, setSalaEmEdicao] = useState(null);
+
     const [createModal, setCreateModal] = useState(false);
 
-    const [editAmbiente, setEditAmbiente] = useState(null)
     const [error, setError] = useState(null);
 
     const [validationErrors, setValidationErrors] = useState({})
@@ -61,12 +64,11 @@ export default function ListaAmbiente() {
         setModalOpen(true)
         setTimeout(() => cleanerForm(), 100)
     }
-
     const openEditModalSalas = (sala) => {
+        setIsEditingSala(true);
+        setSalaEmEdicao(sala);
         setModalOpenSalas(true);
-        isEditingSala(true);
-        setEditSala(sala)
-    }
+    };
 
     const openEditModal = (ambiente) => {
         setIsEditing(true)
@@ -76,11 +78,11 @@ export default function ListaAmbiente() {
     }
 
     const closeModal = () => {
-        setModalOpen(false)
-        setIsEditing(false)
-        setEditAmbiente(null)
+        setModalOpen(false);
         setModalOpenSalas(false);
-    }
+        setIsEditingSala(false);
+        setSalaEmEdicao(null);
+    };
 
     const buscarAmbientes = () => {
         axios.get("http://localhost:8000/reservaAmbiente/", {
@@ -198,40 +200,36 @@ export default function ListaAmbiente() {
     }
 
     const handleSubmitSalas = () => {
-
         const formData = {
             numero: numeroRef.current.value
-        }
+        };
 
-        if (isEditingSala) {
-            axios.put(`http://localhost:8000/sala/${editSala.id}`, formData, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+        if (isEditingSala && salaEmEdicao) {
+            axios.put(`http://localhost:8000/sala/${salaEmEdicao.id}`, formData, {
+                headers: { Authorization: `Bearer ${token}` }
             })
                 .then(() => {
-                    buscarSalas()
-                    closeModal()
+                    buscarSalas();
+                    closeModal();
                 })
                 .catch(error => {
-                    console.log("Erro ao editar sala: ", error)
-                })
-        }
-        else {
+                    console.error("Erro ao editar sala:", error);
+                });
 
+        } else {
             axios.post("http://localhost:8000/sala/", formData, {
                 headers: { Authorization: `Bearer ${token}` }
-            }).then(response => {
-                console.log(response.data.results);
-                buscarSalas();
-                closeModal()
-            }).catch(error => {
-                console.log("Erro ao criar sala: ", error);
-            });
-
+            })
+                .then(() => {
+                    buscarSalas();
+                    closeModal();
+                })
+                .catch(error => {
+                    console.error("Erro ao criar sala:", error);
+                });
         }
+    };
 
-    }
 
 
     const deletarSala = (id) => {
@@ -274,10 +272,10 @@ export default function ListaAmbiente() {
                 if (salaReservadaRef.current) salaReservadaRef.current.value = editAmbiente.Sala_reservada
                 if (professorResponsavelRef.current) professorResponsavelRef.current.value = editAmbiente.Professor_responsavel
                 if (disciplinProfessorref.current) disciplinProfessorref.current.value = editAmbiente.Disciplina_professor;
-
+                if (isEditingSala && salaEmEdicao && numeroRef.current)  numeroRef.current.value = salaEmEdicao.numero;
             })
         }
-    }, [isEditing, editAmbiente, modalOpen]);
+    }, [isEditing, editAmbiente, modalOpen,salaEmEdicao]);
 
     return (
         <section className="container-ambiente">
@@ -361,7 +359,7 @@ export default function ListaAmbiente() {
                                     <th>Ações</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody >
                                 {salas.length > 0 ? (
                                     salas.map((sala) => (
                                         <tr key={sala.id}>
@@ -442,7 +440,6 @@ export default function ListaAmbiente() {
                 onClose={closeModal}
                 className="custom-modal"
                 overlayClassName="custom-overlay"
-                shouldCloseOnOverlayClick={false}
             >
 
                 <h2>{isEditingSala ? 'Editar Sala' : 'Criar Sala'}</h2>
@@ -456,11 +453,15 @@ export default function ListaAmbiente() {
 
                     <div className="btns">
 
-                        <button className='btn-cancalar' onClick={closeModal}>
+                        <button
+                            type="button"
+                            className="btn-cancalar"
+                            onClick={closeModal}
+                        >
                             Cancelar
                         </button>
                         <button type="submit" className="btn-create">
-                            {isEditing ? 'Salvar Alterações' : 'Criar'}
+                            {isEditingSala ? 'Salvar Alterações' : 'Criar'}
                         </button>
 
 

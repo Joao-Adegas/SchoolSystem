@@ -1,4 +1,4 @@
-import ListaDiretor from "../Conponentes/ListaDiretor/ListaDiretor"
+import ListaDiretor from "../components/ListaDiretor/ListaDiretor"
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";

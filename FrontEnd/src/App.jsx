@@ -1,5 +1,5 @@
 
-import Layout from "./Conponentes/Layout/Layout"
+import Layout from "./components/Layout/Layout"
 
 import Login from "./pages/Login"
 import Home from "./pages/Home";

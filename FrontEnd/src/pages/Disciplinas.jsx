@@ -1,4 +1,4 @@
-import ListaDisciplinas from "../Conponentes/ListaDisciplinas/ListaDisciplinas"
+import ListaDisciplinas from "../components/ListaDisciplinas/ListaDisciplinas"
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";

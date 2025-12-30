@@ -1,4 +1,4 @@
-import ListaProfessores from "../Conponentes/ListaProfessores/ListaProfessores"
+import ListaProfessores from "../components/ListaProfessores/ListaProfessores"
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";

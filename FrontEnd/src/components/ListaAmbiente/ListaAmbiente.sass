@@ -46,7 +46,7 @@
             cursor: pointer
 
 .container-table
-    width: 95rem
+    width: 100%
     background-color: #ffffff
     border-radius: 1rem
     padding: 1.5rem
@@ -67,6 +67,19 @@
 .ambiente-table
     width: 100%
     border-collapse: collapse
+    min-width: 700px
+    border-collapse: collapse
+
+    @media (max-width: 768px)
+        .container-table
+            padding: 1rem
+            border-radius: 0.5rem
+
+        .ambiente-table
+            font-size: 0.85rem
+
+        .actions
+            gap: 0.4rem
 
     thead
         th
@@ -163,8 +176,6 @@ form
         font-family: "Roboto"
         cursor: pointer
 
-
-
     button
         margin-top: 1rem
         padding: 0.6rem
@@ -189,4 +200,3 @@ form
 select.error,
 input.error
     border: 1px solid #dc2626
-
